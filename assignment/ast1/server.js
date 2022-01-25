@@ -11,8 +11,11 @@ app.get("/", (req, res) => res.sendFile(__dirname + "/form.html"))
 app.post("/", (req, res) => {
   res.writeHead(200, { "Content-type": "text/html" })
   if (req.body.password === "leapfrog"){
+    const data = require("./data.json")
     console.log("success")
-    res.write(`Welcome ${req.body.username} <br> Webpage Designing SOON !!!`)
+    
+    res.status(200).send(data)
+
   }
   else{
       res.write(`WRONG PASSWORD! <br> <b>${req.body.username} </b>, Did you Forgot your password ?`)
