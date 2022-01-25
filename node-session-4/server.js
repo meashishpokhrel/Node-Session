@@ -9,7 +9,6 @@ app.use(express.json());
 function test(req, res, next)
 const port = process.env.PORT || 3000;
 
-router.get("/", (req, res) => res.send("Welcome"));
 
 router.get("/login", (req, res) => {
   console.log(req.params);
