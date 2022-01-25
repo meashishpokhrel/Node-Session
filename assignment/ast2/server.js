@@ -6,28 +6,12 @@ const router = express.Router();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-function test(req, res, next)
+
 const port = process.env.PORT || 3000;
 
-router.get("/", (req, res) => res.send("Welcome"));
+// CRUD OPERATIONS
 
-router.get("/login", (req, res) => {
-  console.log(req.params);
-  res.sendFile(__dirname + "/login.html");
-});
-
-router.post("/login", (req, res) => {
-  console.log(req.body);
-  const { email, password } = req.body;
-  if (email === "test@gmail.com" && password === "test") {
-      const data = require("./data.json")
-      console.log("sucess")
-      res.send(data)
-  } else {
-    res.send("Invalid email or password");
-  }
-});
-
+//READ OPERATION
 router.get("/todos", (req, res) => {
     // res.sendFile(__dirname + "/data.html");
     var data = fs.readFileSync("data.json")
@@ -36,6 +20,7 @@ router.get("/todos", (req, res) => {
     // res.status(200).send(data)
   });
 
+//WRITE  OPERATION
 router.post("/todos", (req,res) => {
     var data = fs.readFileSync("data.json")
     data = JSON.parse(data)
@@ -57,14 +42,68 @@ router.post("/todos", (req,res) => {
     res.status(200).send(data)
 })
 
-router.delete("/todos", (req,res) => {
-    const data = require("./data.json")
-    res.status(200).send(data)
+
+
+
+// UPDATE OPERATIONS
+router.put("/todos/:title", (req,res) => {
+    var titleParam = req.params.title
+    // var title = req.body.title
+    var descr = req.body.description 
+    var status = req.body.status
+
+    var data = fs.readFileSync(__dirname + "/data.json")
+    data = JSON.parse(data)
+
+    var index = data.findIndex((data) => {
+        return (data.title === titleParam)
+    })
+
+    if (index >= 0){
+        data[index].description = descr
+        data[index].status = status
+    
+    var newData = JSON.stringify(data)
+    fs.writeFile(__dirname + "/data.json", newData, (err) => {
+        if (err){
+            console.log(err)
+        }
+        else{
+            res.status(200).send(data)
+        }
+    })
+    }
+    
 })
 
-// router.get("/", (req,res) => {
-//     res.sendFile(path.join(__dirname, "data.html"))
-// })
+
+//DELETE OPERATION
+router.delete("/todos/:title", (req,res) => {
+    var titleParam = req.params.title
+    // var title = req.body.title
+
+
+    var data = fs.readFileSync(__dirname + "/data.json")
+    data = JSON.parse(data)
+
+    var index = data.findIndex((data) => {
+        return (data.title === titleParam)
+    })
+
+    if (index >= 0){
+        data.splice(index, 1)
+    
+    var newData = JSON.stringify(data)
+    fs.writeFile(__dirname + "/data.json", newData, (err) => {
+        if (err) {
+            console.log(err)
+        }
+        else{
+            res.status(200).send(data)
+        }
+    })
+    }
+})
 
 
 app.use("/", router);
