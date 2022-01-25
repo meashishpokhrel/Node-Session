@@ -13,13 +13,13 @@ router.get("/", (req, res) => res.send("Welcome"));
 
 router.get("/login", (req, res) => {
   console.log(req.params);
-  res.sendFile(__dirname + "/login.html");
+  res.sendFile(__dirname + "/form.html");
 });
 
 router.post("/login", (req, res) => {
   console.log(req.body);
-  const { email, password } = req.body;
-  if (email === "test@gmail.com" && password === "test") {
+  const { username, password } = req.body;
+  if (username === "ashish" && password === "1234") {
       const data = require("./data.json")
       console.log("sucess")
       res.send(data)
