@@ -60,8 +60,9 @@ router.put("/todos/:title", (req,res) => {
     })
 
     if (index >= 0){
-        data[index].description = descr
-        data[index].status = status
+        var updateData = data[index]
+        updateData.description = descr
+        updateData.status = status
     
     var newData = JSON.stringify(data)
     fs.writeFile(__dirname + "/data.json", newData, (err) => {
